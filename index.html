@@ -58,7 +58,13 @@
       white-space: pre-line;
       text-align: center;
     }
+    canvas {
+      margin-top: 20px;
+      width: 100%;
+      max-height: 300px;
+    }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="container">
@@ -77,9 +83,16 @@
     </label>
     <button onclick="calculate()">Рассчитать</button>
     <div id="result"></div>
+    <div id="charts">
+      <canvas id="yearsChart"></canvas>
+      <canvas id="meetingsChart"></canvas>
+      <canvas id="callsChart"></canvas>
+    </div>
   </div>
 
   <script>
+    let yearsChart, meetingsChart, callsChart;
+
     function calculate() {
       const age1 = parseFloat(document.getElementById('age1').value);
       const age2 = parseFloat(document.getElementById('age2').value);
@@ -104,6 +117,67 @@
       const totalMeetings = yearsRemaining * times;
       const totalCalls = yearsRemaining * calls;
       resultEl.innerText = `Осталось лет: ${yearsRemaining}\nВсего встреч: ${totalMeetings}\nВсего звонков: ${totalCalls}`;
+      updateCharts(yearsRemaining, totalMeetings, totalCalls);
+    }
+
+    function updateCharts(yearsRemaining, totalMeetings, totalCalls) {
+      const yearsCtx = document.getElementById('yearsChart').getContext('2d');
+      const meetingsCtx = document.getElementById('meetingsChart').getContext('2d');
+      const callsCtx = document.getElementById('callsChart').getContext('2d');
+
+      if (!yearsChart) {
+        yearsChart = new Chart(yearsCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Осталось лет'],
+            datasets: [{
+              label: 'Лет',
+              data: [yearsRemaining],
+              backgroundColor: '#4caf50'
+            }]
+          },
+          options: { scales: { y: { beginAtZero: true } } }
+        });
+      } else {
+        yearsChart.data.datasets[0].data = [yearsRemaining];
+        yearsChart.update();
+      }
+
+      if (!meetingsChart) {
+        meetingsChart = new Chart(meetingsCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Всего встреч'],
+            datasets: [{
+              label: 'Встреч',
+              data: [totalMeetings],
+              backgroundColor: '#2196f3'
+            }]
+          },
+          options: { scales: { y: { beginAtZero: true } } }
+        });
+      } else {
+        meetingsChart.data.datasets[0].data = [totalMeetings];
+        meetingsChart.update();
+      }
+
+      if (!callsChart) {
+        callsChart = new Chart(callsCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Всего звонков'],
+            datasets: [{
+              label: 'Звонки',
+              data: [totalCalls],
+              backgroundColor: '#ff9800'
+            }]
+          },
+          options: { scales: { y: { beginAtZero: true } } }
+        });
+      } else {
+        callsChart.data.datasets[0].data = [totalCalls];
+        callsChart.update();
+      }
     }
   </script>
 </body>
