@@ -21,6 +21,9 @@
   <label>Сколько раз в год встречаетесь:
     <input type="number" id="timesPerYear" min="0" placeholder="например, 1">
   </label>
+  <label>Сколько звонков в год совершаете:
+    <input type="number" id="callsPerYear" min="0" placeholder="например, 12">
+  </label>
   <button onclick="calculate()">Рассчитать</button>
   <div id="result"></div>
 
@@ -29,6 +32,7 @@
       const age1 = parseFloat(document.getElementById('age1').value);
       const age2 = parseFloat(document.getElementById('age2').value);
       const times = parseFloat(document.getElementById('timesPerYear').value);
+      const calls = parseFloat(document.getElementById('callsPerYear').value);
       const resultEl = document.getElementById('result');
       if (isNaN(age1) || isNaN(age2)) {
         resultEl.innerText = 'Пожалуйста, введите оба возраста.';
@@ -38,11 +42,16 @@
         resultEl.innerText = 'Пожалуйста, введите количество встреч в год.';
         return;
       }
+      if (isNaN(calls)) {
+        resultEl.innerText = 'Пожалуйста, введите количество звонков в год.';
+        return;
+      }
       const olderAge = Math.max(age1, age2);
       let yearsRemaining = 80 - olderAge;
       if (yearsRemaining < 0) yearsRemaining = 0;
       const totalMeetings = yearsRemaining * times;
-      resultEl.innerText = `Осталось лет: ${yearsRemaining}\nВсего встреч: ${totalMeetings}`;
+      const totalCalls = yearsRemaining * calls;
+      resultEl.innerText = `Осталось лет: ${yearsRemaining}\nВсего встреч: ${totalMeetings}\nВсего звонков: ${totalCalls}`;
     }
   </script>
 </body>
